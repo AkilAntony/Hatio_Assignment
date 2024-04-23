@@ -194,7 +194,7 @@ function ProjectDetails() {
                     <div></div>
                 </div>
 
-        )): <p>No todos to show</p>}
+        )): <div>No todos to show</div>}
            
   
             

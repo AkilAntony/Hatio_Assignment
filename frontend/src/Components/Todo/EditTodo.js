@@ -10,17 +10,18 @@ const EditTodo = () => {
     description,status,
     projectName,projectId} = location.state || {};
   console.log(todoId,todo,description,status,projectName,projectId);
-  const [isChecked,setIsChecked] = useState(false)
+   
   const [todoValue, setTodoValue] = useState(todo);
   const [descriptionValue, setDescriptionValue] = useState(description);
   const [statusValue, setStatusValue] = useState(status);
 
-  const handleCheckBox = ()=>{
-    setIsChecked(!isChecked);
+  const handleCheckBox = (e)=>{
+    const isChecked = e.target.checked;
     if(isChecked){
-      setStatusValue('Completed')
-    }
+      setStatusValue('Completed');
+    }else setStatusValue('Pending')
     
+ 
   }
   const handleSave = async () => {
     try {
@@ -73,7 +74,6 @@ const EditTodo = () => {
                 <div className='flex gap-1 items-center'>
                     <input type="checkbox"
                         value={status}
-                        checked={isChecked}
                         onChange={handleCheckBox}/>
                     <span>{statusValue}</span>
                 </div>

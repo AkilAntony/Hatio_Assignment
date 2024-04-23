@@ -39,9 +39,30 @@ const postTodo = async(req,res)=>{
     }
 }
 
-const putTodo = (req,res)=>{
-    console.log(req)
-       res.json({message:'update todo'})
+const putTodo = async(req,res)=>{
+    try{
+        const id = req.params.id
+        if(!id){
+            return res.status(401).json({message:'The todo you are trying update is not available'})
+        }
+        const {todo,description,status} = req.body;
+        if(!todo || !description || !status){
+            return res.status(401).json({message:'Please enter Tods and Todo Description for update'})
+        }
+        const updateTodo = await Todo.findByIdAndUpdate(id,
+            { todo:todo, description:description, status:status },
+            { new: true } )
+        if(!updateTodo){
+            return res.status(404).json({ message: 'Todo item not found' });
+        }
+        res.status(200).json({ message: 'Todo updated successfully', todo: updateTodo });
+    }catch(error){
+        console.log(error);
+         res.status(500).json({ message: 'An error occurred while updating the todo item' });
+    }
+  
+    
+    
 }  
 
 const deleteTodo = async(req,res)=>{
@@ -54,7 +75,7 @@ const deleteTodo = async(req,res)=>{
         if (!deleteFromDB) {
       // If the ID does not exist, return a 404 error
             return res.status(404).json({ message: 'Todo not found' });
-        }
+        }   
         return res.status(200).json({message:'todo Deleted'})
     }catch(err){
         console.log(err)
