@@ -1,14 +1,15 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
-import EditTodo from '../Todo/EditTodo';
+import ProjectSummary from '../ProjectSummary';
 
 function ProjectDetails() {
     const [isVisible,setIsVisible] = useState(false);
     const [todo,setTodo] = useState('');
     const [description,setDescription] = useState('');
     const [warning,setWarning] = useState('')
-    const [flag,setFlag] = useState(false)
+    const [flag,setFlag] = useState(false);
+    const [projectSummary,setProjectSummary] = useState('')
     const location = useLocation();
     const navigate = useNavigate()
     // const [isEditable, setIsEditable] = useState(false);
@@ -41,11 +42,9 @@ function ProjectDetails() {
 
     // function to create todo
     const handleCreate = async()=>{
-        console.log({todo,description});
         if(!todo || !description) {
             return setWarning("Please Enter Todo and Description")
-        } else {setWarning('');
-        }   
+        } else setWarning('');
         try{
             const response = await axios.post('http://localhost:5000/todos',
                 {todo:todo,
@@ -54,27 +53,25 @@ function ProjectDetails() {
                 {headers:
                     {Authorization:`Bearer ${localStorage.getItem('token')}`
                 }
-          })
+            })
           if(response){
             setTodo('')
             setFlag(true)
             setDescription('');
-   
           }
-           console.log(response)
         }catch(error){
             console.log(error)
         }
     }
+
     // functio to delete todo
     const handleDelete = async(id)=>{
-    console.log('delete btn clicked')
         try{
             const response = await axios.delete(`http://localhost:5000/todos/${id}`,
-        {headers:{
-             Authorization:`Bearer ${localStorage.getItem('token')}`
-        }})
-        console.log(response.data)
+                {headers:{
+                    Authorization:`Bearer ${localStorage.getItem('token')}`
+                }
+            })
         const updatedTodos = todoList.filter((todo) => todo.id !== id);
         setTodoList(updatedTodos);
         setFlag(true)
@@ -82,6 +79,7 @@ function ProjectDetails() {
             console.log(err)
         }
     }
+
     // function to handle edit todo
     const handleEdit = (data)=>{
         const todoId = data._id
@@ -92,39 +90,73 @@ function ProjectDetails() {
             {todoId,todo,description,
             status,projectName,projectId}})
     }
+
     // function to clear input fields in the todo creation screen 
     const handleClear = ()=>{
         setTodo('')
         setDescription('');
-        setWarning('');
-         
+        setWarning(''); 
     }
 
-    // this sets the creteTodo screen visible
+    // function to  set the creteTodo screen visible
     const handleVisible =()=>{
         setIsVisible(!isVisible)
     }
 
-  return (
-    <div className='m-2 md:m-10'>
-        <p className='text-2xl text-center'>{projectName}</p>
-        <div className='mt-6'>
-            <button className='bg-green-700 py-2 px-2
-             text-white rounded-sm shadow-md'
-             onClick={handleVisible}>Add New Todo</button>
+    // function to get Project summary
+    const getProjectSummary = async()=>{
+        if(projectId){
+            try{
+                const response = await axios.get(`http://localhost:5000/todos/summary/${projectId}`);
+                console.log(response.data.gistUrl);
+                setProjectSummary(response.data.gistUrl)
+            }catch(error){
+                console.log(error)
+            }
+        }
+    }
 
+
+  return (
+    <div className='p-5'>
+        <p className='text-2xl text-center text-white'>{projectName}</p>
+        <div className='flex items-center justify-between m-5'>
+            <button 
+                className='bg-pink-600 py-2 px-2    
+                 text-white rounded-sm shadow-md'
+                onClick={handleVisible}>
+                Add New Todo
+            </button>
+             <button 
+                className='bg-green-400 py-2 px-2 '
+                onClick = {getProjectSummary}>
+                Project Summary
+            </button>
+        </div>
+
+        {/* PROJECT SUMMARY */}
+        {projectSummary && 
+            <div>
+                <ProjectSummary gistUrl = {projectSummary} />
+            </div>
+        }
+        
+        
+        <div className='mt-6 flex flex-col m-5'>
             {/* Crete todo section - start */}
             {isVisible && 
-                <div className='bg-slate-100 p-5 mt-4'>
+                <div className=' p-5 mt-4'>
                     <div className='flex md:items-center md:justify-center 
                             md:gap-3 flex-wrap' >
                         <div className='flex flex-wrap items-center gap-4'>
                             <input type="text" value={todo} 
                                 className='border bg-white py-2' 
+                                placeholder='Enter Todo Name'
                                 onChange={(e)=>{setTodo(e.target.value)}}
                                />
                             <textarea name="description"  cols="40" rows=""
-                                className='' value={description}
+                                className='border' 
+                                value={description}
                                 onChange={(e)=>{setDescription(e.target.value)}}
                                 placeholder='Enter todo Description'>
                             </textarea>
@@ -150,7 +182,7 @@ function ProjectDetails() {
         {/* Project Details - start */}
         {todoList ? 
             todoList.map((data)=>(
-                <div className="mt-4 bg-slate-100 
+                <div className="mt-4 border 
                             rounded-lg shadow p-4" key={data._id}>
                     {/* Project Name and Status */}
                         <div className="flex justify-between 
@@ -188,8 +220,8 @@ function ProjectDetails() {
                     {/* Dates: Creation and Update */}
                     <div className="flex flex-col
                             text-sm text-gray-500">
-                        <p>Created:</p> {/* Creation Date */}
-                        <p>Updated:  </p> {/* Update Date */}
+                        <p>Created:{data.createdDate}</p> {/* Creation Date */}
+                        <p>Updated:  {data.updatedDate}</p> {/* Update Date */}
                     </div>
                     <div></div>
                 </div>

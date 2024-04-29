@@ -7,5 +7,5 @@ router.get('/',verifyToken,todoController.getTodo)
 router.post('/',verifyToken,todoController.postTodo)
 router.put('/:id', todoController.putTodo)
 router.delete('/:id',verifyToken, todoController.deleteTodo)
-
+router.get('/summary/:id',todoController.generateProjectSummary)
 export default router

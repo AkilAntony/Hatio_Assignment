@@ -2,7 +2,6 @@ import {Project} from '../Models/Project.js'
 
 
 const setProject = async (req,res)=>{
-    console.log(req.body.title)
     const projectTitle = req.body.title
     if(!projectTitle) return res.status(401).json({message:'Enter Project Title'})
     try{
@@ -38,8 +37,6 @@ const getProjects = async(req,res) =>{
     //    const id = projects.map(data=>data.id)
     //    console.log(formattedProjects)
        return res.status(200).json({formattedProjects})
-        
-    
         
     }catch(err){
         return res.status(401).json({message:'You are not authorized'})

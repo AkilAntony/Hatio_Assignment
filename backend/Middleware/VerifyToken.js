@@ -8,15 +8,15 @@ import { Project } from '../Models/Project.js'
         req.headers.authorization.startsWith('Bearer')){
             try{
                 const token = req.headers.authorization.split(' ')[1]
-                console.log(token)
+                // console.log(token)
                 if(!token) {
                     return res.status(401).json({message:'unathourized,Token not Provided'});
                 }
                 const decoded = jwt.verify(token,process.env.SECRET_KEY)
-                console.log(decoded)
+                // console.log(decoded)
                 req.user = await User.findById(decoded.userId).select('-password');
                 req.project = await Project.findById(decoded.userId).select('-password')
-                console.log(req.user)
+                // console.log(req.user)
                 next();
             }catch(error){
                 console.log(error)

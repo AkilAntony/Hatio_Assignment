@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const EditTodo = () => {
@@ -14,14 +14,11 @@ const EditTodo = () => {
   const [todoValue, setTodoValue] = useState(todo);
   const [descriptionValue, setDescriptionValue] = useState(description);
   const [statusValue, setStatusValue] = useState(status);
+  const [isChecked,setIsChecked] = useState(false)
 
-  const handleCheckBox = (e)=>{
-    const isChecked = e.target.checked;
-    if(isChecked){
-      setStatusValue('Completed');
-    }else setStatusValue('Pending')
-    
- 
+
+  const handleCheckBox = ()=>{
+   
   }
   const handleSave = async () => {
     try {
@@ -38,44 +35,53 @@ const EditTodo = () => {
   };
 
   return (
-     <div className="mt-4 bg-zinc-400 
-                            rounded-lg shadow m-2">
+     <div className="mt-4 border m-auto md:w-3/4 mt-10 ">
         <div>
             <h1 className='text-2xl text-center font-bold'>{projectName}</h1>
         </div>
         
             {/* Todo Name ,and Status and  */}
             <div className='flex items-center justify-center 
-                    flex-col gap-4 md:flex-row 
-                    md:justify-evenly mt-5'>
+                    flex-col gap-4  
+                    mt-5'>
 
                 {/* Todo input field */}
-                <div className='gap-2 flex md:flex-row 
-                        md:items-center flex-col'>
-                    <label className='font-bold'>Enter todo:</label>
-                    <input
-                        type="text"
-                        value={todoValue}
-                        className='border py-1 rounded-sm'
-                        onChange={(e)=>setTodoValue(e.target.value)}
-                    />
-                </div>
+                <div className='md:w-2/4 '>
+                  <div className='gap-2 flex flex-col'>
+                      <label className=''>Enter todo:</label>
+                      <input
+                          type="text"
+                          value={todoValue}
+                          className='border py-1 rounded-md'
+                          onChange={(e)=>setTodoValue(e.target.value)}
+                      />
+                  </div>
 
-                {/* description field */}
-                <div className='gap-2 flex md:flex-row 
-                        md:items-center flex-col'>
-                    <label className='font-bold'>Enter Description</label>
-                    <textarea cols="30"
-                        className='border rounded-sm '
-                        onChange={(e)=>{setDescriptionValue(e.target.value)}}
-                        value={descriptionValue}>
-                    </textarea>
-                </div>
-                <div className='flex gap-1 items-center'>
-                    <input type="checkbox"
-                        value={status}
-                        onChange={handleCheckBox}/>
-                    <span>{statusValue}</span>
+                  {/* description field */}
+                  <div className='gap-2 flex flex-col mt-7 mb-5'>
+                      <label className=''>Enter Description</label>
+                      <textarea cols="30"
+                          className='border rounded-sm '
+                          onChange={(e)=>{setDescriptionValue(e.target.value)}}
+                          value={descriptionValue}>
+                      </textarea>
+                  </div>
+                  <div className='flex gap-3 items-center mt-7 mb-5'>
+                    <label htmlFor=""> Mark as Completed:</label>
+                      <input type="checkbox"
+                          value={status}
+                         
+                          onChange={handleCheckBox}/>
+                      <span>{statusValue}</span>
+                  </div>
+                  <div className="flex items-center justify-center mb-10">
+                    <button className="bg-green-600
+                                text-white px-3 py-1 rounded w-full
+                                hover:bg-green-800 transition"
+                            onClick={handleSave}>
+                        Save
+                    </button>
+                  </div>
                 </div>
                 {/* <button
                     className="bg-green-500 text-white 
@@ -86,15 +92,7 @@ const EditTodo = () => {
                           
             </div>
                     {/* Edit and Delete Button */}
-            <div className="flex gap-2">
-                <button className="bg-blue-500
-                            text-white px-3 py-1 rounded 
-                            hover:bg-blue-600 transition"
-                        onClick={handleSave}>
-                    Save
-                </button>
-            
-            </div>
+           
                     <div></div>
                 </div>
 
