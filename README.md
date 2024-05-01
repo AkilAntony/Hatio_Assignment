@@ -75,6 +75,7 @@ Set up environment variables:
 Start the server: 
   npm start
   The server should start running on http://localhost:5000.
+  Start the React App on the port 3000
 
 Access the application:
   Front-end: Set up your React app to interact with the back-end endpoints.
