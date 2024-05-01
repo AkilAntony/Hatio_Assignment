@@ -17,7 +17,7 @@ function Login() {
                 const response =  await axios.post('http://localhost:5000/login',{email,password});
                 console.log('response',response.data)
                 if(response.data.token)  localStorage.setItem('token',response.data.token);
-                localStorage.getItem('token') ? navigate('/project') : console.log('no token')
+                localStorage.getItem('token') ? navigate('/project',{state:{email}}) : console.log('no token')
                
             }
         }catch(error){

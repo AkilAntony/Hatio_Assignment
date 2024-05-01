@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
 import ProjectSummary from '../ProjectSummary';
+import Warning from '../Warning/Warning';
 
 function ProjectDetails() {
     const [isVisible,setIsVisible] = useState(false);
@@ -18,7 +19,7 @@ function ProjectDetails() {
     // const projectId = location.state.prjectId;
      
     const [todoList,setTodoList] = useState([]);
-
+    console.log(todoList.length)
     useEffect(()=>{
         const getProjectDetails = async()=>{
             try{
@@ -180,7 +181,7 @@ function ProjectDetails() {
          {/* Create todo section - End */}
 
         {/* Project Details - start */}
-        {todoList ? 
+        {todoList && todoList.length>0 ? 
             todoList.map((data)=>(
                 <div className="mt-4 border 
                             rounded-lg shadow p-4" key={data._id}>
@@ -226,7 +227,7 @@ function ProjectDetails() {
                     <div></div>
                 </div>
 
-        )): <div>No todos to show</div>}
+        )): <Warning error="No todo's available" />}
            
   
             

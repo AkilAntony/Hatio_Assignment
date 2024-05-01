@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Navigate, useNavigate, useSearchParams } from 'react-router-dom'
+import { Navigate, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import Modal from '../Modal/Modal'
 import axios from 'axios';
 import LogoutAlert from './LogoutAlert';
@@ -11,9 +11,12 @@ function Project() {
   const [error,setError] = useState(false);
   const [warning,setWarning] =  useState('')
   const navigate = useNavigate();
-   const [isModalOpen, setModalOpen] = useState(false);
-  const [isVisible,setIsVisible] = useState(false)
-  // Callback function to get projectName from Modal component
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [isVisible,setIsVisible] = useState(false);
+  const location = useLocation();
+  const loginedUser = location.state ||  {};
+  console.log('user',loginedUser)
+    // Callback function to get projectName from Modal component
   const getProjectName= (data)=>{
     console.log("recieved data",data)
     setProjectName(data)
@@ -80,11 +83,12 @@ const handleNavigation = (projectId,projectName)=>{
         <div className='m-5'>
 
           {/* Project name and Logout button */}
-          <div className='flex items center justify-between  '>
-            <h1 className='text-center text-2xl font-bold mb-5'>
-              Hi Email Your Projects
+          <div className='flex   md:justify-between flex-col '>
+            <h1 className='text-center text-2xl font-bold mb-5
+             bg-lime-400 py-3 '>
+              Welcome {loginedUser.email}
             </h1>
-            <button className = 'bg-red-600 h-8 text-white shadow-md rounded-sm px-2'  
+            <button className = 'bg-red-600 h-8 text-white shadow-md rounded-sm px-2 w-20'  
               onClick= {openLogoutAlert}>Log out</button>
           </div>
 
